@@ -28,6 +28,8 @@
 	src="/encuestadocente/resources/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 <script src="/encuestadocente/resources/angular/angular.min.js"></script>
 
+<script src="/encuestadocente/resources/js/loader.js"></script>
+
 </head>
 
 <body>
@@ -47,26 +49,25 @@
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-<!-- 					<li class="active"><a href="#">Home</a></li> -->
-<!-- 					<li><a href="#about">About</a></li> -->
-<!-- 					<li><a href="#contact">Contact</a></li> -->
-<!-- 					<li class="dropdown"><a href="#" class="dropdown-toggle" -->
-<!-- 						data-toggle="dropdown" role="button" aria-haspopup="true" -->
-<!-- 						aria-expanded="false">Dropdown <span class="caret"></span></a> -->
-<!-- 						<ul class="dropdown-menu"> -->
-<!-- 							<li><a href="#">Action</a></li> -->
-<!-- 							<li><a href="#">Another action</a></li> -->
-<!-- 							<li><a href="#">Something else here</a></li> -->
-<!-- 							<li role="separator" class="divider"></li> -->
-<!-- 							<li class="dropdown-header">Nav header</li> -->
-<!-- 							<li><a href="#">Separated link</a></li> -->
-<!-- 							<li><a href="#">One more separated link</a></li> -->
-<!-- 						</ul></li> -->
+					<!-- 					<li class="active"><a href="#">Home</a></li> -->
+					<!-- 					<li><a href="#about">About</a></li> -->
+					<!-- 					<li><a href="#contact">Contact</a></li> -->
+					<!-- 					<li class="dropdown"><a href="#" class="dropdown-toggle" -->
+					<!-- 						data-toggle="dropdown" role="button" aria-haspopup="true" -->
+					<!-- 						aria-expanded="false">Dropdown <span class="caret"></span></a> -->
+					<!-- 						<ul class="dropdown-menu"> -->
+					<!-- 							<li><a href="#">Action</a></li> -->
+					<!-- 							<li><a href="#">Another action</a></li> -->
+					<!-- 							<li><a href="#">Something else here</a></li> -->
+					<!-- 							<li role="separator" class="divider"></li> -->
+					<!-- 							<li class="dropdown-header">Nav header</li> -->
+					<!-- 							<li><a href="#">Separated link</a></li> -->
+					<!-- 							<li><a href="#">One more separated link</a></li> -->
+					<!-- 						</ul></li> -->
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<!-- 					<li><a href="../navbar/">Default</a></li> -->
-					<li><a href="../navbar-static-top/">Bienvenido Enrique
-							Bellido Molina</a></li>
+					<li><a href="../navbar-static-top/">Bienvenido Administrador</a></li>
 					<li class="active"><a href="./">Cerrar sesión<span
 							class="sr-only">(current)</span></a></li>
 				</ul>
@@ -84,7 +85,7 @@
 			<h3>
 				<strong>Reporte de Resultados por Docente y Curso</strong>
 			</h3>
-			
+
 			<br>
 
 			<div class="form-horizontal">
@@ -110,7 +111,7 @@
 						</select>
 					</div>
 				</div>
-				
+
 				<div class="form-group">
 					<label for="exampleInputName2" class="col-sm-3 control-label">Semestre
 						Académico:</label>
@@ -120,7 +121,7 @@
 							placeholder="">
 					</div>
 				</div>
-				
+
 				<div class="form-group">
 					<label for="exampleInputName2" class="col-sm-3 control-label">Año
 						de Estudios:</label>
@@ -130,7 +131,7 @@
 							placeholder="">
 					</div>
 				</div>
-				
+
 				<div class="form-group">
 					<label for="exampleInputName2" class="col-sm-3 control-label">Curso:</label>
 					<div class="col-sm-8">
@@ -164,7 +165,6 @@
 			</div>
 
 			<script>
-			
 				var app = angular.module('poll', []);
 
 				app.directive('onFinishRender', function($timeout) {
@@ -180,79 +180,132 @@
 					}
 				});
 
-				app.controller('CabeceraEncuestaController', function($scope, $http) {
-					$scope.cabeceraDesHabilitada = true;
-					$scope.idFacultad = null;
-					$scope.idEncuesta = '${idEncuesta}';
-					$scope.idUsuario = '${idAdministrativo}';
-					
+				app
+						.controller(
+								'CabeceraEncuestaController',
+								function($scope, $http) {
+									$scope.cabeceraDesHabilitada = true;
+									$scope.idFacultad = null;
+									$scope.idEncuesta = '${idEncuesta}';
+									$scope.idUsuario = '${idAdministrativo}';
 
-					$http.get('api/obtenerFacultades').then(
-							function(response) {
-								$scope.facultades = response.data;
-							});
-					
-					$scope.obtenerCarrerasProfesionales = function() {
-						
-						if($scope.idFacultad != null){
-							$http.get('api/obtenerCarrerasProfesionales/' + $scope.idFacultad).then(
-										function(response) {
-											$scope.carrerasProfesionales = response.data;
-										}
-							);
-						}
-					}
-					
-					$scope.obtenerCursos = function() {
-						
-						if($scope.idCarreraProfesional != null){
-							$http.get('api/obtenerCursos/' + $scope.idCarreraProfesional).then(
-										function(response) {
-											$scope.cursos = response.data;
-										}
-							);
-						}
-					}
-					
-					$scope.obtenerGrupos = function() {
-						
-						if($scope.idCurso != null){
-							$http.get('api/obtenerGruposPorCurso/' + $scope.idCurso).then(
-										function(response) {
-											$scope.grupos = response.data;
-										}
-							);
-						}
-					}
-					
-					$scope.obtenerDocenteGrupo = function() {
-						
-						if($scope.idGrupo != null){
-							
-							for(i = 0; i < $scope.grupos.length; i++){
-								if( $scope.grupos[i].idGrupo =  $scope.idGrupo){
-									$scope.idDocente = $scope.grupos[i].idDocente;
-								}
-							}
-						}
-					}
-					
-					
+									$http
+											.get('api/obtenerFacultades')
+											.then(
+													function(response) {
+														$scope.facultades = response.data;
+													});
 
-				});
+									$scope.obtenerCarrerasProfesionales = function() {
+
+										if ($scope.idFacultad != null) {
+											$http
+													.get(
+															'api/obtenerCarrerasProfesionales/'
+																	+ $scope.idFacultad)
+													.then(
+															function(response) {
+																$scope.carrerasProfesionales = response.data;
+															});
+										}
+									}
+
+									$scope.obtenerCursos = function() {
+
+										if ($scope.idCarreraProfesional != null) {
+											$http
+													.get(
+															'api/obtenerCursos/'
+																	+ $scope.idCarreraProfesional)
+													.then(
+															function(response) {
+																$scope.cursos = response.data;
+															});
+										}
+									}
+
+									$scope.obtenerGrupos = function() {
+
+										if ($scope.idCurso != null) {
+											$http
+													.get(
+															'api/obtenerGruposPorCurso/'
+																	+ $scope.idCurso)
+													.then(
+															function(response) {
+																$scope.grupos = response.data;
+															});
+										}
+									}
+
+									$scope.obtenerDocenteGrupo = function() {
+
+										if ($scope.idGrupo != null) {
+
+											for (i = 0; i < $scope.grupos.length; i++) {
+												if ($scope.grupos[i].idGrupo = $scope.idGrupo) {
+													$scope.idDocente = $scope.grupos[i].idDocente;
+												}
+											}
+										}
+									}
+
+								});
 			</script>
 
+			<br>
 			<div class="container">
 
 				<input name="esModificacion" id="esModificacion" hidden="true">
+
+				<h4>
+					<strong>Criterio conocimiento de la materia</strong>
+				</h4>
 				
-				<div class="progress">
-				  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-				    60%
-				  </div>
-				</div>
+				<!--Div that will hold the pie chart-->
+				<div style="text-align: center;">
+    				<div id="chart_div"></div>
+    			</div>
+
+				
 
 			</div>
 		</div>
+		
+	<script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+          ['Muy Bueno', 3],
+          ['Bueno', 1],
+          ['Regular', 1],
+          ['Malo', 1],
+          ['Muy Malo', 2]
+        ]);
+
+        // Set chart options
+        var options = {'title':'',
+                       'width':400,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
 </body>
 </html>
