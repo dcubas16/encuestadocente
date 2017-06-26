@@ -5,6 +5,7 @@ import java.util.List;
 import org.encuestadocente.entities.CabeceraEncuesta;
 import org.encuestadocente.entities.DetallePreguntaAlumnoGrupo;
 import org.encuestadocente.entities.Encuesta;
+import org.encuestadocente.entities.Estadistico;
 import org.encuestadocente.entities.RespuestaTransaccion;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
@@ -136,6 +137,40 @@ public class EncuestaDAOImpl implements EncuestaDAO {
 		Encuesta encuesta = (Encuesta)query.uniqueResult();
 		
 		return encuesta;
+	}
+
+	@Override
+	public List<Estadistico> obtenerEstadisticas(int idGrupo, int idEncuesta) {
+		Query query = sessionFactory.getCurrentSession()
+				.createSQLQuery(" SELECT DAG.ID_GRUPO as idGrupo "
+						+ " , E.ID AS encuestaId "
+						+ " , C.ID AS criterioId "
+						+ " , P.ID AS preguntaId "
+						+ " , DPAG.VALOR AS valorEncuesta "
+						+ " , COUNT(1) AS conteoValor "
+						+ " FROM ENCUESTA E "
+						+ " INNER JOIN CRITERIO C ON E.ID = C.ID_ENCUESTA "
+						+ " INNER JOIN PREGUNTA P ON P.ID_CRITERIO = C.ID "
+						+ " INNER JOIN DETALLE_PREGUNTA_ALUMNO_GRUPO DPAG ON DPAG.ID_PREGUNTA = P.ID "
+						+ " INNER JOIN DETALLE_ALUMNO_GRUPO DAG ON DAG.ID = DPAG.ID_ALUMNO_GRUPO "
+						+ " WHERE E.ID = :idEncuesta "
+						+ " AND DAG.ID_GRUPO = :idGrupo "
+						+ " GROUP BY DAG.ID_GRUPO, E.ID, C.ID, P.ID, DPAG.VALOR ")
+				.addScalar("idGrupo", StandardBasicTypes.INTEGER)
+				.addScalar("encuestaId", StandardBasicTypes.INTEGER)
+				.addScalar("criterioId", StandardBasicTypes.INTEGER)
+				.addScalar("preguntaId", StandardBasicTypes.INTEGER)
+				.addScalar("valorEncuesta", StandardBasicTypes.INTEGER)
+				.addScalar("conteoValor", StandardBasicTypes.INTEGER)
+				.setResultTransformer(Transformers.aliasToBean(Estadistico.class));
+
+		query.setParameter("idEncuesta", idEncuesta);
+		query.setParameter("idGrupo", idGrupo);
+		
+		@SuppressWarnings("unchecked")
+		List<Estadistico> estadisticos = query.list();
+		
+		return estadisticos;
 	}
 
 }

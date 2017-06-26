@@ -2,12 +2,14 @@ package org.encuestadocente.controllers;
 
 import java.util.List;
 
+import org.encuestadocente.dao.EncuestaDAO;
 import org.encuestadocente.dao.GeneralDAO;
 import org.encuestadocente.entities.CabeceraEncuesta;
 import org.encuestadocente.entities.CarreraProfesional;
 import org.encuestadocente.entities.Curso;
 import org.encuestadocente.entities.DetallePreguntaAlumnoGrupo;
 import org.encuestadocente.entities.Encuesta;
+import org.encuestadocente.entities.Estadistico;
 import org.encuestadocente.entities.Facultad;
 import org.encuestadocente.entities.Grupo;
 import org.encuestadocente.entities.RespuestaTransaccion;
@@ -42,9 +44,11 @@ public class MainController {
 	@Autowired
 	private UsuarioService usuarioService;
 	
-
 	@Autowired
 	private GeneralDAO generalDAO;
+	
+	@Autowired
+	private EncuestaDAO encuestaDAO;
 
 	@RequestMapping(value = "login.htm", method = RequestMethod.GET)
 	public String login(Model model) {
@@ -72,12 +76,6 @@ public class MainController {
 
 		return "statistics";
 	}
-	
-//	@RequestMapping(value = "statistics.htm", method = RequestMethod.GET)
-//	public String statistics(Model model) {
-//
-//		return "statistics";
-//	}
 
 	@RequestMapping(value = "/api/obtenerCabeceraEncuesta/{idAlumno}", method = RequestMethod.GET)
 	public @ResponseBody CabeceraEncuesta obtenerCabeceraEncuesta(@PathVariable String idAlumno) {
@@ -157,6 +155,14 @@ public class MainController {
 		List<Grupo> grupos = generalDAO.obtenerGruposPorCurso(idCurso);
 		
 		return grupos;
+	}	
+	
+	@RequestMapping(value = "/api/obtenerEstadisticas/{idGrupo}/{idEncuesta}", method = RequestMethod.GET)
+	public @ResponseBody List<Estadistico> obtenerEstadisticas(@PathVariable int idGrupo, @PathVariable int idEncuesta) {
+
+		List<Estadistico> estadisticos = encuestaDAO.obtenerEstadisticas(idGrupo, idEncuesta);
+		
+		return estadisticos;
 	}	
 
 }

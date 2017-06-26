@@ -247,6 +247,17 @@
 													$scope.idDocente = $scope.grupos[i].idDocente;
 												}
 											}
+											
+											$http
+											.get(
+													'api/obtenerEstadisticas/'
+															+ $scope.idGrupo + "/" + $scope.idEncuesta )
+											.then(
+													function(response) {
+														$scope.estadisticos = response.data;
+													});
+											
+											
 										}
 									}
 
