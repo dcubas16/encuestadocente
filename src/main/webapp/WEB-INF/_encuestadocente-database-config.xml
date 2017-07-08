@@ -12,7 +12,8 @@
 		<property name="hbm2ddl.auto">create</property>
 <!-- 		<property name="import_files">/import.sql</property> -->
 
-		<mapping class="org.encuestadocente.entities.Alumno" />
+		<mapping class="org.encuestadocente.entities.Alumno" />		
+		<mapping class="org.encuestadocente.entities.Encuesta" />
 <!-- 		<mapping class="org.protaxi.entities.NaturalPerson" /> -->
 <!-- 		<mapping class="org.protaxi.entities.LegalEntity" /> -->
 		

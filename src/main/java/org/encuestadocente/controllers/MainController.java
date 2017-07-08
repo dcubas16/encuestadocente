@@ -6,12 +6,14 @@ import org.encuestadocente.dao.EncuestaDAO;
 import org.encuestadocente.dao.GeneralDAO;
 import org.encuestadocente.entities.CabeceraEncuesta;
 import org.encuestadocente.entities.CarreraProfesional;
+import org.encuestadocente.entities.Criterio;
 import org.encuestadocente.entities.Curso;
 import org.encuestadocente.entities.DetallePreguntaAlumnoGrupo;
 import org.encuestadocente.entities.Encuesta;
 import org.encuestadocente.entities.Estadistico;
 import org.encuestadocente.entities.Facultad;
 import org.encuestadocente.entities.Grupo;
+import org.encuestadocente.entities.Pregunta;
 import org.encuestadocente.entities.RespuestaTransaccion;
 import org.encuestadocente.entities.Usuario;
 import org.encuestadocente.services.EncuestaService;
@@ -76,7 +78,18 @@ public class MainController {
 
 		return "statistics";
 	}
+	
+	@RequestMapping(value = "createPoll.htm", method = RequestMethod.GET)
+	public String createPoll(Model model, @RequestParam("idAdministrativo") int idAdministrativo) {
 
+		Encuesta encuesta = encuestaService.obtenerEncuestaActiva();
+		
+		model.addAttribute("idAdministrativo", idAdministrativo);
+		model.addAttribute("idEncuesta", encuesta.getId());
+
+		return "createPoll";
+	}
+	
 	@RequestMapping(value = "/api/obtenerCabeceraEncuesta/{idAlumno}", method = RequestMethod.GET)
 	public @ResponseBody CabeceraEncuesta obtenerCabeceraEncuesta(@PathVariable String idAlumno) {
 
@@ -164,5 +177,57 @@ public class MainController {
 		
 		return estadisticos;
 	}	
+	
+	@RequestMapping(value = "/api/guardarEncuesta/{nombre}/{instrucciones}", method = RequestMethod.GET)
+	public @ResponseBody Encuesta guardarEncuesta(@PathVariable String nombre, @PathVariable String instrucciones) {
+
+		Encuesta encuestaGuardada = encuestaService.guardarEncuesta(nombre, instrucciones);
+		
+		return encuestaGuardada;
+	}	
+	
+	@RequestMapping(value = "/api/guardarCriterio/{idEncuesta}/{descripcion}/{ponderacion}/{orden}", method = RequestMethod.GET)
+	public @ResponseBody Criterio guardarCriterio(@PathVariable int idEncuesta, @PathVariable String descripcion, @PathVariable int ponderacion, @PathVariable int orden ) {
+
+		Criterio criterio = new Criterio();
+		criterio.setIdEncuesta(idEncuesta);
+		criterio.setDescripcion(descripcion);
+		criterio.setPonderacion(ponderacion);
+		criterio.setOrden(orden);
+		
+		criterio = encuestaService.guardarCriterio(criterio);
+		
+		return criterio;
+	}	
+	
+	@RequestMapping(value = "/api/eliminarCriterio/{idEncuesta}/{idCriterio}", method = RequestMethod.GET)
+	public @ResponseBody boolean eliminarCriterio(@PathVariable int idEncuesta, @PathVariable int idCriterio) {
+		
+		boolean esCriterioEliminado = encuestaService.eliminarCriterio(idEncuesta, idCriterio);
+		
+		return esCriterioEliminado;
+	}
+	
+	@RequestMapping(value = "/api/guardarPregunta/{idCriterio}/{descripcion}/{orden}", method = RequestMethod.GET)
+	public @ResponseBody Pregunta guardarPregunta(@PathVariable int idCriterio, @PathVariable String descripcion, @PathVariable int orden) {
+		
+		Pregunta pregunta = new Pregunta();
+		pregunta.setIdCriterio(idCriterio);
+		pregunta.setDescripcion(descripcion);
+		pregunta.setOrden(orden);
+		
+		return encuestaService.guardarPregunta(pregunta);
+	}
+	
+//	@RequestMapping(value = "/api/eliminarPregunta/{idCriterio}/{idPregunta}", method = RequestMethod.GET)
+//	public @ResponseBody Pregunta eliminarPregunta(@PathVariable int idCriterio, @PathVariable String descripcion, @PathVariable int orden) {
+//		
+//		Pregunta pregunta = new Pregunta();
+//		pregunta.setIdCriterio(idCriterio);
+//		pregunta.setDescripcion(descripcion);
+//		pregunta.setOrden(orden);
+//		
+//		return encuestaService.guardarPregunta(pregunta);
+//	}
 
 }

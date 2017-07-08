@@ -3,9 +3,11 @@ package org.encuestadocente.dao;
 import java.util.List;
 
 import org.encuestadocente.entities.CabeceraEncuesta;
+import org.encuestadocente.entities.Criterio;
 import org.encuestadocente.entities.DetallePreguntaAlumnoGrupo;
 import org.encuestadocente.entities.Encuesta;
 import org.encuestadocente.entities.Estadistico;
+import org.encuestadocente.entities.Pregunta;
 import org.encuestadocente.entities.RespuestaTransaccion;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
@@ -171,6 +173,48 @@ public class EncuestaDAOImpl implements EncuestaDAO {
 		List<Estadistico> estadisticos = query.list();
 		
 		return estadisticos;
+	}
+
+	@Override
+	public Encuesta guardarEncuesta(String nombre, String instrucciones) {
+
+		Encuesta encuesta = new Encuesta();
+
+		encuesta.setNombre(nombre);
+		encuesta.setInstruccion(instrucciones);
+		encuesta.setEstado(1);
+		
+		sessionFactory.getCurrentSession().saveOrUpdate(encuesta);
+		
+		return encuesta;
+	}
+
+	@Override
+	public Criterio guardarEncuesta(Criterio criterio) {
+		sessionFactory.getCurrentSession().saveOrUpdate(criterio);
+		return criterio;
+	}
+
+	@Override
+	public boolean eliminarCriterio(int idEncuesta, int idCriterio) {
+		try{
+			sessionFactory.getCurrentSession()
+			  .createQuery("delete from Criterio where id = :idCriterio and idEncuesta = :idEncuesta ")
+			  .setParameter("idCriterio", idCriterio)
+			  .setParameter("idEncuesta", idEncuesta)
+			  .executeUpdate();
+			
+			return true;
+		}catch(Exception e){
+			return false;
+		}
+		
+	}
+
+	@Override
+	public Pregunta guardarPregunta(Pregunta pregunta) {
+		sessionFactory.getCurrentSession().saveOrUpdate(pregunta);
+		return pregunta;
 	}
 
 }

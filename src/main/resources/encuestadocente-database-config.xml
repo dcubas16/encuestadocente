@@ -13,6 +13,9 @@
 <!-- 		<property name="import_files">/import.sql</property> -->
 
 		<mapping class="org.encuestadocente.entities.Alumno" />
+		<mapping class="org.encuestadocente.entities.Encuesta" />
+		<mapping class="org.encuestadocente.entities.Criterio" />
+		<mapping class="org.encuestadocente.entities.Pregunta" />
 		
 	</session-factory>
 </hibernate-configuration>

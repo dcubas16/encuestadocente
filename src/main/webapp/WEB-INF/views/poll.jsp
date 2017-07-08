@@ -319,7 +319,7 @@
 											objetoEncuesta.valor = arregloEncuesta[i].value;
 
 											$scope.arregloCriterioPregunta
-													.push(objetoEncuesta)
+													.push(objetoEncuesta);
 										}
 
 										if (arregloEncuesta.length < ($('input[class=criterioPregunta]').length / 5)) {

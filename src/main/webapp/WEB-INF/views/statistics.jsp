@@ -258,7 +258,22 @@
 													});
 											
 											
+											$scope.obtenerEncuesta();
+											
 										}
+									}
+									
+									
+									$scope.obtenerEncuesta = function() {
+
+										$http
+										.get(
+												'api/obtenerEncuesta/'
+														+ $scope.idEncuesta)
+										.then(
+												function(response) {
+													$scope.encuesta = response.data;
+												});
 									}
 
 								});
@@ -273,14 +288,60 @@
 					<strong>Criterio conocimiento de la materia</strong>
 				</h4>
 				
-				<!--Div that will hold the pie chart-->
-				<div style="text-align: center;">
-    				<div id="chart_div"></div>
-    			</div>
-
 				
 
 			</div>
+			
+			<br>
+			
+			<div class="container">
+
+				<div class="row">
+					<div class="col-md-8" align="center">
+						<h4>
+							<strong>CRITERIOS</strong>
+						</h4>
+					</div>
+					<div class="col-md-4" align="center">
+						<h4>
+							<strong>PUNTAJE TOTAL 13</strong>
+						</h4>
+					</div>
+				</div>
+
+				<input name="esModificacion" id="esModificacion" hidden="true">
+
+				<div class="row" ng-repeat="criterio in encuesta.listaCriterio"
+					on-finish-render="ngRepeatFinished">
+					<div class="col-md-8" align="center">
+						<h4>
+							<strong style="text-transform: capitalize;">{{criterio.descripcion}}</strong>
+						</h4>
+					</div>
+					<div class="col-md-4" align="center">
+						<h4>
+							<strong>Ponderación( {{criterio.ponderacion}} )</strong>
+						</h4>
+					</div>
+
+					<div class="row" ng-repeat="pregunta in encuesta.listaPregunta">
+
+						<div ng-if="pregunta.idCriterio == criterio.id">
+							<br>
+							<div class="col-md-8">{{pregunta.orden}}.
+								{{pregunta.descripcion}}</div>
+								
+							<!--Div that will hold the pie chart-->
+							<div style="text-align: center;">
+			    				<div id="chart_div"></div>
+			    			</div>
+					</div>
+					</div>
+
+					<br>
+				</div>
+			</div>
+			
 		</div>
 		
 	<script type="text/javascript">
